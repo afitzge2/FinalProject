@@ -9,5 +9,5 @@ package FinalProject;
  */
 public enum WaterType
 {
-    FRESHWATER, SALTWATER
+    FRESHWATER, SALTWATER, NONE
 }
