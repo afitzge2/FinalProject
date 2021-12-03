@@ -34,14 +34,14 @@ public class Fish
             InvalidFishException e = new InvalidFishException("Fish can only be from Freshwater or Saltwater");
             throw e;
         }
-        if (fishLengthMin > 0) {
+        if (fishLengthMin >= 0) {
             this.fishLengthMin = lMin;
         }
         else {
             InvalidFishException e = new InvalidFishException("A fish cannot have a negative length");
             throw e;
         }
-        if (fishLengthMax > 0) {
+        if (fishLengthMax >= 0) {
             this.fishLengthMax = lMax;
         }
         else {
@@ -124,5 +124,12 @@ public class Fish
     
     public void setName( String n) {
         this.name = n;
+    }
+    
+    public void printInfo() {
+        System.out.println(this.name);
+        System.out.println("The primary color of " + this.name + " is " + this.pColor);
+        System.out.println("The secondary color of " + this.name + " is " + this.sColor);
+        System.out.println(this.name + " grows between " + this.fishLengthMin + " and " + this.fishLengthMax);
     }
 }
