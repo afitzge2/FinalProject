@@ -14,68 +14,42 @@ public class Fish
     private double fishLengthMin;
     private double fishLengthMax;
     private String name;
+    private double length;
     // create default constructor
     public Fish() {
         this.pColor = " ";
         this.sColor = " ";
         this.waterType = null;
-        this.fishLengthMin = 0;
-        this.fishLengthMax = 0;
+        this.fishLengthMin = 1;
+        this.fishLengthMax = 1;
         this.name = " ";
     }
     // create non default constructor
-    public Fish(String pColor, String sColor, WaterType w, double lMin, double lMax) throws InvalidFishException {
+    public Fish(String pColor, String sColor, WaterType w, double l) throws InvalidFishException {
         this.pColor = pColor;
         this.sColor = sColor;
-        if (w.equals(WaterType.FRESHWATER) || w.equals(WaterType.SALTWATER)) {
-            this.waterType = w;
-        }
-        else {
-            InvalidFishException e = new InvalidFishException("Fish can only be from Freshwater or Saltwater");
-            throw e;
-        }
-        if (fishLengthMin >= 0) {
-            this.fishLengthMin = lMin;
-        }
-        else {
-            InvalidFishException e = new InvalidFishException("A fish cannot have a negative length");
-            throw e;
-        }
-        if (fishLengthMax >= 0) {
-            this.fishLengthMax = lMax;
-        }
-        else {
-            InvalidFishException e = new InvalidFishException("A fish cannot have a negative length");
-            throw e;
-        }
+        this.waterType = w;
+        this.length = l;
         this.name = " ";
     }
 
     public Fish(String n, String pColor, String sColor, WaterType w, double lMin, double lMax) throws InvalidFishException {
         this.pColor = pColor;
         this.sColor = sColor;
-        if (w.equals(WaterType.FRESHWATER) || w.equals(WaterType.SALTWATER)) {
-            this.waterType = w;
-        }
-        else {
-            InvalidFishException e = new InvalidFishException("Fish can only be from Freshwater or Saltwater");
-            throw e;
-        }
-        if (fishLengthMin > 0) {
-            this.fishLengthMin = lMin;
-        }
-        else {
-            InvalidFishException e = new InvalidFishException("A fish cannot have a negative length");
-            throw e;
-        }
-        if (fishLengthMax > 0) {
-            this.fishLengthMax = lMax;
-        }
-        else {
-            InvalidFishException e = new InvalidFishException("A fish cannot have a negative length");
-            throw e;
-        }
+        this.waterType = w;
+        this.fishLengthMin = lMin;
+        this.fishLengthMax = lMax;
         this.name = n;
+    }
+
+    public Fish(String n, String pColor, String sColor, WaterType w, double l, double lMin, double lMax) throws InvalidFishException {
+        this.pColor = pColor;
+        this.sColor = sColor;
+        this.waterType = w;
+        this.length = l;
+        this.name = n;
+        this.fishLengthMin = lMin;
+        this.fishLengthMax = lMax;
     }
     // create get and set methods for all descriptions
     public String getPColor() {
@@ -117,19 +91,34 @@ public class Fish
     public void setLengthMax(double l) {
         this.fishLengthMax = l;
     }
-    
+
     public String getName() {
         return this.name;
     }
-    
+
     public void setName( String n) {
         this.name = n;
     }
-    
+
+    public double getLength() {
+        return this.length;
+    }
+
     public void printInfo() {
         System.out.println(this.name);
         System.out.println("The primary color of " + this.name + " is " + this.pColor);
         System.out.println("The secondary color of " + this.name + " is " + this.sColor);
         System.out.println(this.name + " grows between " + this.fishLengthMin + " and " + this.fishLengthMax);
+    }
+
+    public String toString() {
+        String n = this.name;
+        String pColor = this.pColor;
+        String sColor = this.sColor;
+        WaterType w = this.waterType;
+        double l = this.length;
+        String fishLength = Double.toString(l);
+        String all = "The fish is called " + n + " its primary color is " + pColor + " its seconday color is " + sColor + " and it had a length of " + fishLength;
+        return all;
     }
 }

@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+
 /**
  * This program is designed to get an input from the user with the details about a fish that they had just caught.
  *It will then check the details against a list of identifying features and if one matches, it will return the name of the fish and some information about it.
@@ -55,7 +57,7 @@ public class FishFinder
         // try/ catch to find out if the fish is in the list
         try {
             // create Fish object
-            Fish f = new Fish(pColor, sColor, waterType, length, length);
+            Fish f = new Fish(pColor, sColor, waterType, length);
             // testing individual parts of the fish object against a list of classes to see if they match
             for (int i = 0; i < testFish.size(); i++) {
                 Fish c = testFish.get(i);
@@ -66,33 +68,48 @@ public class FishFinder
                         //testing if the water types are the same
                         if (waterType.equals(c.getWaterType())) {
                             // testing if the length of the fish is greater than the minimum length
-                            if (f.getLengthMin() >= c.getLengthMin()) {
+                            if (f.getLength() >= c.getLengthMin()) {
                                 //testing if the length of the fish is shorter than the maximum length
-                                if (f.getLengthMax() <= c.getLengthMax()) {
+                                if (f.getLength() <= c.getLengthMax()) {
                                     //setting the caught fish to include the name so it can be returned
-                                    f = c;
+                                    Fish match = new Fish(c.getName(), f.getPColor(), f.getSColor(), c.getWaterType(), f.getLength(), c.getLengthMin(), c.getLengthMax());
+                                    String fact = fishFacts(match);
+                                    match.printInfo();
+                                    System.out.println(fact);
+                                    System.out.println("------------------------");
+                                    // seeing if the user would like to store the fish in a list
+                                    System.out.println("Would you like to add this fish to a list of fish you have caught: Y/N ");
+                                    String YN = input.next();
+                                    if (YN.equals("Y") || YN.equals("y")) {
+                                        try
+                                        {
+                                            addToFishFile(match);
+                                        }
+                                        catch (IOException ioe)
+                                        {
+                                            ioe.printStackTrace();
+                                        }
+                                        break;
+                                    }
                                 }
                             }
                         }
                     }
                 }
             }
-            String fact = fishFacts(f);
-            f.printInfo();
-            System.out.print(fact);
-            System.out.println("------------------------");
-            System.out.println("Would you like to add this fish to a list of fish you have caught: Y/N ");
-            String YN = input.next();
-            // if (YN == "Y" || YN == "y") {
-                // addFishToList(f);
 
-            // }
         }
         catch(InvalidFishException e) {
-            System.err.println("InvalidFishExcpetion: " + e.getMessage() );
+            System.err.println("InvalidFishExcpetion: This Fish does not exist" );
         }
     }
 
+    /**
+     * Method addFishToList
+     *This method makes adds Fish objects into an arraylist that has been given
+     *Allows for the user to test against all fish in the file to see if what they have caught to see what its name is
+     * @param list ArrayList to addFishToList
+     */
     public static void addFishToList(ArrayList<Fish> list) {
         try {
             Fish bluegill = new Fish("Bluegill", "Blue", "Grey", WaterType.FRESHWATER, 4.0, 6.0);
@@ -142,8 +159,17 @@ public class FishFinder
 
     }
 
+    
+
+    /**
+     * Method fishFacts
+     *This method takes in a fish argument then tests to see if the name matches the fish from method AddFishToList
+     *If it finds a match, it will print a line of facts about the fish
+     * @param f Fish to fishFact
+     * @return the string that corresponds to the name of the fish
+     */
     public static String fishFacts(Fish f) {
-        if (f.getName().equals("bluegill")) {
+        if (f.getName().equals("Bluegill")) {
             return "This is a small pan fish that is located throughout North American. It is known for its colors as well as being relatively common";
         }
         else if (f.getName().equals("Large Mouth Bass")) {
@@ -205,9 +231,16 @@ public class FishFinder
         }
     }
 
-    public static void addToFishList(Fish f) throws IOException {
+    /**
+     * Method addToFishFile
+     *
+     *Saves what is currently in the file as a ArrayList and then adds the new fish to the end of the ArrayList.
+     *prints the ArrayList back out to Fish.txt
+     * @param f Fish to addToFishFile
+     */
+    public static void addToFishFile(Fish f) throws IOException {
         //open fishList to get current lines to save
-        FileInputStream FileIn = new FileInputStream("FishList.txt");
+        FileInputStream FileIn = new FileInputStream("Fish.txt");
         Scanner Scan = new Scanner(FileIn);
         //make array list to save current and additional line to
         ArrayList<String> fishList = new ArrayList<String>();
@@ -218,17 +251,17 @@ public class FishFinder
         //close FishList.txt
         FileIn.close();
         // get info about the fish and save to a string
-        String fInfo = f.getName() + ", " + f.getPColor() + ", " + f.getSColor() + ", " + f.getWaterType() + ", " + f.getLengthMin(); 
+        String fInfo = f.toString(); 
         fishList.add(fInfo);
         // open FishList.txt and create PrintWriter to print arraylist back to the text file
-        FileOutputStream FileOut = new FileOutputStream("FishList.txt");
+        FileOutputStream FileOut = new FileOutputStream("Fish.txt");
         PrintWriter out = new PrintWriter(FileOut);
         // print line by line to text file
         for (int i = 0; i < fishList.size(); i++) {
             String a = fishList.get(i);
             out.println(a);
         }
+        out.flush();
         FileOut.close();
     }
 }
-
